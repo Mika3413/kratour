@@ -17,9 +17,10 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - uses: android-actions/setup-android@v3
-
       - uses: gradle/actions/setup-gradle@v4
+
+      - name: SDK Android (préinstallé sur les runners GitHub)
+        run: echo "sdk.dir=$ANDROID_HOME" > local.properties
 
       - name: Tests du moteur (règles, cartes, IA contre IA)
         run: ./gradlew :core:test --no-daemon
