@@ -45,7 +45,7 @@ jobs:
         with:
           tag_name: derniere-version
           name: Kratour — dernière version
-          prerelease: true
+          prerelease: false
           make_latest: true
           files: Kratour.apk
           body: |
