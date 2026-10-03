@@ -5,6 +5,9 @@ on:
   pull_request:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -26,11 +29,25 @@ jobs:
         run: ./gradlew :core:test --no-daemon
 
       - name: Compilation de l'APK
-        run: ./gradlew :app:assembleDebug :app:assembleRelease --no-daemon
+        run: |
+          ./gradlew :app:assembleDebug :app:assembleRelease --no-daemon
+          cp app/build/outputs/apk/release/app-release.apk Kratour.apk
 
       - uses: actions/upload-artifact@v4
         with:
           name: kratour-apk
-          path: |
-            app/build/outputs/apk/debug/*.apk
-            app/build/outputs/apk/release/*.apk
+          path: Kratour.apk
+
+      # Lien de téléchargement direct (sans compte GitHub) : Releases > « Dernière version ».
+      - name: Publication de l'APK
+        if: github.event_name == 'push'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: derniere-version
+          name: Kratour — dernière version
+          prerelease: true
+          make_latest: true
+          files: Kratour.apk
+          body: |
+            APK de Kratour compilé automatiquement depuis la branche ${{ github.ref_name }} (commit ${{ github.sha }}).
+            Sur le téléphone : télécharger Kratour.apk, l'ouvrir, autoriser l'installation d'applications inconnues si demandé.
