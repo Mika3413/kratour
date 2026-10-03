@@ -17,8 +17,9 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            // Pas de R8 : le jeu est léger, et certains environnements de build sur téléphone
+            // (ex. CodeAssist) embarquent un R8 incompatible avec la version d'Android de l'appareil.
+            isMinifyEnabled = false
             // Signé avec la clé de debug pour pouvoir installer directement l'APK de release.
             signingConfig = signingConfigs.getByName("debug")
         }
